@@ -18,7 +18,7 @@ with open(classesFile, 'rt') as f:
     classes = f.read().rstrip('\n').split('\n')
 
 
-# Arquivos com as configurações e pesos da rede
+# Arquivos com as configurações e pesos da rede pre-treinada
 modelConfiguration = "yolov3.cfg";  # configurações da rede
 modelWeights = "yolov3.weights";  # configurações de pesos
 
@@ -31,15 +31,15 @@ net.setPreferableTarget(cv.dnn.DNN_TARGET_CPU)
 
 # Retorna o nome das camadas de saída
 def getOutputsNames(net):
-    # Retorna o nome de todas as camadas na rede
+    # Retorna o nome de todas as camadas da rede
     layersNames = net.getLayerNames()
 
     return [layersNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
 
-# Desenha um caixa delimitadora em volta do objeto detectado
+# Desenha a bounding box em volta do objeto detectado
 def drawPred(classId, conf, left, top, right, bottom):
-    # Desenha a caixa delimitadora
+    # Desenha a bounding box
     cv.rectangle(frame, (left, top), (right, bottom), (255, 178, 50), 3)
 
     label = '%.2f' % conf
@@ -49,7 +49,7 @@ def drawPred(classId, conf, left, top, right, bottom):
         assert (classId < len(classes))
         label = '%s:%s' % (classes[classId], label)
 
-    # Apresenta a label no topo da caixa delimitadora
+    # Apresenta a label no topo da bounding box
     labelSize, baseLine = cv.getTextSize(label, cv.FONT_HERSHEY_SIMPLEX, 0.5, 1)
     top = max(top, labelSize[1])
     cv.rectangle(frame, (left, top - round(1.5 * labelSize[1])), (left + round(1.5 * labelSize[0]), top + baseLine),
@@ -58,7 +58,7 @@ def drawPred(classId, conf, left, top, right, bottom):
 
 
 
-# Remove as caixas delimitadores com baixo valor de confiança usando non-maxima suppression
+# Remove as bounding box com baixo valor de confiança usando non-maxima suppression
 def postprocess(frame, outs):
     frameHeight = frame.shape[0]
     frameWidth = frame.shape[1]
@@ -66,8 +66,8 @@ def postprocess(frame, outs):
     classIds = []
     confidences = []
     boxes = []
-    # Analisa todas as caixas delimitadoras e mantém apenas aquelas com alto valor
-    # de confiança, em seguida, atribuí o rótulo da classe com a classe de maior pontuação
+    # Analisa todas as bounding box e mantém apenas aquelas com alto valor
+    # de confiança, em seguida, atribuí o rótulo da classe associada a maior pontuação
     classIds = []
     confidences = []
     boxes = []
@@ -77,7 +77,8 @@ def postprocess(frame, outs):
             classId = np.argmax(scores) # armazena o índice da classe de de confiança
             confidence = scores[classId] # armazena o valor de confiança deste objeto
 
-            # verifica se este valor é pequeno, ou seja, se deverá ser considerado
+            # Verifica se a classe é pessoa e se o grau de confiança é maior que o valor estipulado,
+            # em caso positivo esta box é considera.
             if classes[classId] == "person" and confidence > confThreshold:
                 center_x = int(detection[0] * frameWidth)
                 center_y = int(detection[1] * frameHeight)
@@ -89,7 +90,7 @@ def postprocess(frame, outs):
                 confidences.append(float(confidence))
                 boxes.append([left, top, width, height])
 
-    # Realiza a operação non maximum suppression para eliminar caixas redundantes
+    # Realiza a operação non maximum suppression para eliminar box redundantes
     # sobrepostas com baixa confiança
     indices = cv.dnn.NMSBoxes(boxes, confidences, confThreshold, nmsThreshold)
     for i in indices:
@@ -101,9 +102,8 @@ def postprocess(frame, outs):
         height = box[3]
         drawPred(classIds[i], (i+1) , left, top, left + width, top + height)
 
-    # indices contém a quantidade de objetos, no caso da imagem em questão
-    # como só há pessoas, então a quantidade de elementos em indice será
-    # a predição da quantidade de pessoas na imagem
+    # O tamanho da variável indices representa a quantidade de pessoas
+    # encontradas na imagem.
     print("total de pessoas: ", np.size(indices))
 
 
@@ -119,9 +119,9 @@ blob = cv.dnn.blobFromImage(frame, 1 / 255, (inpWidth, inpHeight), [0, 0, 0], 1,
 # Configura a entrada da rede
 net.setInput(blob)
 
-# A saída consiste em uma lista de caixas delimitadoras de vários objetos
+# A saída consiste em uma lista de bounding box de vários objetos
 outs = net.forward(getOutputsNames(net))
-# A etapa seguinte é remover as caixas delimitadoras com valor baixo de confiança.
+# A etapa seguinte é remover as bounding box com valor baixo confiança.
 # Este valor é determinado no início do código pela variável confThreshold
 postprocess(frame, outs)
 

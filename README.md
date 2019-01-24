@@ -13,7 +13,7 @@ e
 ```
 numpy
 ```
-Também precisará baixar o arquivo que contém os pesos da rede já treinados para
+Também precisará baixar o arquivo **yolov3.weights** que contém os pesos da rede já treinados para
 a classificação
 
 ```
