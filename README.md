@@ -17,7 +17,6 @@ e
 numpy
 ```
 
-```
 
 ### Instalando opencv 4.0 e o Numpy
 
