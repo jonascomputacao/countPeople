@@ -17,7 +17,7 @@ classesFile = "coco.names"; #todas os objetos treinados pelo modelo
 classes = None
 with open(classesFile, 'rt') as f:
     classes = f.read().rstrip('\n').split('\n')
-#classes = "person"
+
 
 # Arquivos com as configurações e pesos da rede
 modelConfiguration = "yolov3.cfg";  # configurações da rede
