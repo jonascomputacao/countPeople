@@ -34,4 +34,8 @@ e para instalar o numpy basta executar
 ```
 pip install numpy
 ```
+### Informações adicionais
 
+Sitema operacional utilizado foi o ubuntu 16.04
+As execuções foram feitas utilizando a CPU
+IDE de desenvolvimento utilizada pycharm
