@@ -127,4 +127,5 @@ postprocess(frame, outs)
 
 #apresenta a imagem com a quantidade de pessoas
 cv.imshow("Quantidade de pessoas na imagem", frame)
+cv.imwrite("numero_de_pessoas.png",frame)
 cv.waitKey()
