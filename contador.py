@@ -1,7 +1,6 @@
 # neste código utiliza-se o opencv e a linguegem python
 # para a utilização do YOLOv3
 #
-#
 import cv2 as cv
 import numpy as np
 
