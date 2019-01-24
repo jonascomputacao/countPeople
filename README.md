@@ -16,7 +16,11 @@ e
 ```
 numpy
 ```
+Também precisará baixar o arquivo que contém os pesos utilizados na detecção de objetos
 
+```
+wget https://pjreddie.com/media/files/yolov3.weights
+```
 
 ### Instalando opencv 4.0 e o Numpy
 
