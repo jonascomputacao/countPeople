@@ -17,6 +17,7 @@ classesFile = "coco.names"; #todas os objetos treinados pelo modelo
 classes = None
 with open(classesFile, 'rt') as f:
     classes = f.read().rstrip('\n').split('\n')
+#classes = "person"
 
 # Arquivos com as configurações e pesos da rede
 modelConfiguration = "yolov3.cfg";  # configurações da rede
@@ -44,7 +45,7 @@ def drawPred(classId, conf, left, top, right, bottom):
 
     label = '%.2f' % conf
 
-    # pega o nome do rótulo e o valor de confiança
+    # pega o nome do rótulo e o valor de confiança e cria uma string
     if classes:
         assert (classId < len(classes))
         label = '%s:%s' % (classes[classId], label)
@@ -76,7 +77,9 @@ def postprocess(frame, outs):
             scores = detection[5:] # vetor com os valores de confiança para cada classe contina em coco.
             classId = np.argmax(scores) # armazena o índice da classe de de confiança
             confidence = scores[classId] # armazena o valor de confiança deste objeto
-            if confidence > confThreshold: # verifica se este valor é pequeno, ou seja, se deverá ser considerado
+
+            # verifica se este valor é pequeno, ou seja, se deverá ser considerado
+            if classes[classId] == "person" and confidence > confThreshold:
                 center_x = int(detection[0] * frameWidth)
                 center_y = int(detection[1] * frameHeight)
                 width = int(detection[2] * frameWidth)
