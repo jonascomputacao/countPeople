@@ -21,7 +21,7 @@ wget https://pjreddie.com/media/files/yolov3.weights
 ### Instalando opencv 4.0 e o Numpy
 Abaixo segue um ótimo tutorial ensinando a instalar o opencv versão 4
 ```
-https://www.pyimagesearch.com/2018/08/15/how-to-install-opencv-4-on-ubuntu/
+<https://www.pyimagesearch.com/2018/08/15/how-to-install-opencv-4-on-ubuntu/>
 ```
 e para instalar o numpy basta executar
 ```
